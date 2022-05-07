@@ -7,21 +7,30 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "cars")
+@Table(name = "car")
 public class Car {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
+
     @Column(nullable = false)
     private String number;
-    @Column(nullable = false)
+
+    @Column(name = "car_brand",nullable = false)
     private String carBrand;
+
     @Column(nullable = false)
     private String color;
+
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(columnDefinition = "enum('truck', 'passenger') default 'passenger'",
+            nullable = false)
     private TypeOfCar type;
+
     @Column(name = "reg_time", columnDefinition = "datetime", nullable = false)
     private Date regTime;
+
+    @Column(name = "year_of_manufacture",nullable = false)
+    private String yearOfManufacture;
 }

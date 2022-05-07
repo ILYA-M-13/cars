@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/cars?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true
-    username: root
-    password: Op009oP!
+    username: ${LOGIN}
+    password: ${PASSWORD}
   jpa:
-    hibernate.ddl-auto: create
+    hibernate.ddl-auto: validate
     show-sql: false

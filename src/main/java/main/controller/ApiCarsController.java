@@ -11,8 +11,6 @@ import main.service.CarService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -26,11 +24,11 @@ public class ApiCarsController {
                                                   @RequestParam(value = "color", required = false) String color,
                                                   @RequestParam(value = "brand", required = false) String brand,
                                                   @RequestParam(value = "year", required = false) String year) {
-        return ResponseEntity.ok(carService.getAllCars(type,color,brand,year,ageOfCar));
+        return ResponseEntity.ok(carService.getAllCars(type, color, brand, year, ageOfCar));
     }
 
     @GetMapping("/car")
-    public ResponseEntity<Car> getCarByNumber(@RequestParam String number){
+    public ResponseEntity<Car> getCarByNumber(@RequestParam String number) {
         return ResponseEntity.ok(carService.getCar(number));
     }
 

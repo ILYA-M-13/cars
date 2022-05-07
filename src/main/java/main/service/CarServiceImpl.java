@@ -19,6 +19,7 @@ public class CarServiceImpl implements CarService {
 
     private final CarRepo carRepo;
 
+
     @Override
     public CarResponse getAllCars(String type, String color, String brand, String year, AgeOfCar ageOfCar) {
         List<Car> cars = new ArrayList<>();

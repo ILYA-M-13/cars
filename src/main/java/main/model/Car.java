@@ -17,7 +17,7 @@ public class Car {
     @Column(nullable = false)
     private String number;
 
-    @Column(name = "car_brand",nullable = false)
+    @Column(name = "car_brand", nullable = false)
     private String carBrand;
 
     @Column(nullable = false)
@@ -31,6 +31,6 @@ public class Car {
     @Column(name = "reg_time", columnDefinition = "datetime", nullable = false)
     private Date regTime;
 
-    @Column(name = "year_of_manufacture",nullable = false)
+    @Column(name = "year_of_manufacture", nullable = false)
     private String yearOfManufacture;
 }

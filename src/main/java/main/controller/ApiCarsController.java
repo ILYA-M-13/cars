@@ -3,8 +3,8 @@ package main.controller;
 import lombok.RequiredArgsConstructor;
 import main.api.request.CarRequest;
 import main.api.response.CarResponse;
-import main.api.response.Response;
 import main.api.response.StatisticsResponse;
+import main.exception.WrongNumberException;
 import main.model.AgeOfCar;
 import main.model.Car;
 import main.service.CarService;
@@ -28,7 +28,7 @@ public class ApiCarsController {
     }
 
     @GetMapping("/car")
-    public ResponseEntity<Car> getCarByNumber(@RequestParam String number) {
+    public ResponseEntity<Car> getCarByNumber(@RequestParam String number) throws WrongNumberException {
         return ResponseEntity.ok(carService.getCar(number));
     }
 
@@ -38,12 +38,12 @@ public class ApiCarsController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Response> addCar(@RequestBody CarRequest carRequest) {
+    public ResponseEntity<Car> addCar(@RequestBody CarRequest carRequest) throws WrongNumberException {
         return ResponseEntity.ok(carService.addCar(carRequest));
     }
 
     @DeleteMapping("/del")
-    public ResponseEntity<Response> delCar(@RequestParam String number) {
+    public ResponseEntity<Boolean> delCar(@RequestParam String number) throws WrongNumberException {
         return ResponseEntity.ok(carService.delCar(number));
     }
 }

@@ -3,8 +3,8 @@ package main.service;
 import lombok.AllArgsConstructor;
 import main.api.request.CarRequest;
 import main.api.response.CarResponse;
-import main.api.response.Response;
 import main.api.response.StatisticsResponse;
+import main.exception.WrongNumberException;
 import main.model.AgeOfCar;
 import main.model.Car;
 import main.model.TypeOfCar;
@@ -37,20 +37,20 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public Car getCar(String number) {
-        return carRepo.findCarByNumber(number).orElse(new Car());
+    public Car getCar(String number) throws WrongNumberException {
+        Optional<Car> oc = carRepo.findCarByNumber(number);
+        if (oc.isPresent()) {
+            return oc.get();
+        } else throw new WrongNumberException("car with this number is not exist");
     }
 
     @Override
     public StatisticsResponse getAllStatistics() {
-        StatisticsResponse sr = carRepo.findAllStatistics();
-        return sr;
+        return carRepo.findAllStatistics();
     }
 
     @Override
-    public Response addCar(CarRequest carRequest) {
-        Response response = new Response();
-        Map<String, String> err = new HashMap<>();
+    public Car addCar(CarRequest carRequest) throws WrongNumberException {
         String number = carRequest.getNumber();
         String brand = carRequest.getCarBrand();
         String color = carRequest.getColor();
@@ -58,43 +58,33 @@ public class CarServiceImpl implements CarService {
         String yearOfManufacture = carRequest.getYearOfManufacture();
 
         if (!isCarNumber(number)) {
-            err.put("number", "Номер авто введен не верно!");
-            response.setErrors(err);
-            return response;
+            throw new WrongNumberException("incorrect number");
         }
         if (carRepo.findCarByNumber(number).isPresent()) {
-            err.put("number", "Авто с таким номером уже существует!");
-            response.setErrors(err);
-            return response;
+            throw new WrongNumberException("car is exist already");
+        } else {
+            Car car = new Car();
+            car.setNumber(number);
+            car.setCarBrand(brand);
+            car.setYearOfManufacture(yearOfManufacture);
+            car.setColor(color);
+            car.setType(type.equals("track") || type.equals("cargo") ? TypeOfCar.truck : TypeOfCar.passenger);
+            car.setRegTime(new Date());
+
+            return carRepo.save(car);
+
         }
-
-        Car car = new Car();
-        car.setNumber(number);
-        car.setCarBrand(brand);
-        car.setYearOfManufacture(yearOfManufacture);
-        car.setColor(color);
-        car.setType(type.equals("track") || type.equals("cargo") ? TypeOfCar.truck : TypeOfCar.passenger);
-        car.setRegTime(new Date());
-
-        carRepo.save(car);
-        response.setResult(true);
-        return response;
     }
 
     @Override
-    public Response delCar(String number) {
-        Response response = new Response();
-        Map<String, String> err = new HashMap<>();
+    public boolean delCar(String number) throws WrongNumberException {
 
         if (number == null || carRepo.findCarByNumber(number).isEmpty()) {
-            err.put("number", "Нет авто с таким номером!");
-            response.setErrors(err);
-            return response;
+            throw new WrongNumberException("auto is exist already");
+        } else {
+            carRepo.deleteCarByNumber(number);
+            return true;
         }
-
-        carRepo.deleteCarByNumber(number);
-        response.setResult(true);
-        return response;
     }
 
     private boolean isCarNumber(String number) {
